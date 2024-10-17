@@ -1,6 +1,7 @@
 from enum import Enum
 from decimal import Decimal
 from math import sqrt, pow
+from typing import Dict, List
 
 
 class BoundingBox:
@@ -20,8 +21,15 @@ class BoundingBox:
         self.x1 = x1
         self.y1 = y1
 
-    def has(self, x: Decimal, y: Decimal):
-        pass
+    def has(self, x: Decimal, y: Decimal) -> bool:
+        """Checks if a point is within this boundingbox
+
+        Parameters
+        ----------
+        x : Decimal
+        y : Decimal
+        """
+        return (self.x0 < x and self.y0 < y) and (self.x1 > x and self.y1 > y)
 
     def size(self) -> float:
         """Returns the size of the bounding box
@@ -42,9 +50,39 @@ class BoundingBox:
 
 
 class Coordinates:
+    class Countries(Enum):
+        Brazil = 0
 
-    class Brazil(Enum):
-        pass
+    class Tags(Enum):
+        ESPECIAL = 0
+        NORMAL = 1
+        TRABALHOSO = 2
+
+    Regions = {
+        Countries.Brazil: {
+            Tags.ESPECIAL: [
+                BoundingBox(
+                    Decimal("-2.196998"),
+                    Decimal("-46.361899"),
+                    Decimal("-15.411580"),
+                    Decimal("-34.276938"),
+                ),
+                BoundingBox(
+                    Decimal("-19.766959"),
+                    Decimal("-52.997614"),
+                    Decimal("-23.966413"),
+                    Decimal("-44.428305"),
+                ),
+            ],
+            Tags.NORMAL: BoundingBox(
+                Decimal("-26.155681"),
+                Decimal("-54.777426"),
+                Decimal("-34.016466"),
+                Decimal("-46.603598"),
+            ),
+            Tags.TRABALHOSO: BoundingBox(),
+        }
+    }
 
 
 class Tag:
