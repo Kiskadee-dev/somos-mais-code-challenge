@@ -1,4 +1,4 @@
-from tags import BoundingBox
+from boundingbox import BoundingBox
 
 
 def test_boundingbox_size():
@@ -11,7 +11,7 @@ def test_boundingbox_size():
 
 def test_boundingbox_has():
     b = BoundingBox(0, 0, 10, 10)
-    assert b.has(5, 5) == True
-    assert b.has(0.01, 9.9) == True
-    assert b.has(0, 0) == False
-    assert b.has(10, 10) == False
+    assert b.has(5, 5) is True
+    assert b.has(0.01, 9.9) is True
+    assert b.has(0, 0) is False
+    assert b.has(10, 10) is False
