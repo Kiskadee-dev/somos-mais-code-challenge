@@ -3,7 +3,7 @@ from decimal import Decimal
 from math import floor
 from typing import Dict, List
 
-from boundingbox import BoundingBox
+from regions.boundingbox import BoundingBox
 from regions.definitions.regiontypes import RegionTypes
 from regions.definitions.values import VALUES
 

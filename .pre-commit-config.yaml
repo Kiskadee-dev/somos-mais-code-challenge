@@ -2,7 +2,16 @@ repos:
   - repo: local
     hooks:
       - id: run-ruff
-        name: Run ruff before commit
+        name: Run ruff formatter before commit
+        entry: poetry run python -m ruff format .
+        language: system
+        always_run: true
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: run-ruff-checks
+        name: Run ruff checks before commit
         entry: poetry run python -m ruff check .
         language: system
         always_run: true

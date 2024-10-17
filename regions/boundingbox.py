@@ -3,7 +3,6 @@ from math import pow, sqrt
 
 
 class BoundingBox:
-
     def __init__(self, x0: Decimal, y0: Decimal, x1: Decimal, y1: Decimal) -> None:
         """This class accepts 2 points in space to form a boundary
 
