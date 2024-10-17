@@ -1,4 +1,4 @@
-from regions.definitions.types import RegionTypes
+from regions.definitions.regiontypes import RegionTypes
 from regions.regions import Regions
 
 

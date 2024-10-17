@@ -4,7 +4,7 @@ from math import floor
 from typing import Dict, List
 
 from boundingbox import BoundingBox
-from regions.definitions.types import RegionTypes
+from regions.definitions.regiontypes import RegionTypes
 from regions.definitions.values import VALUES
 
 
