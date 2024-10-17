@@ -13,20 +13,22 @@ class BoundingBox:
         x1 : Decimal
         y1 : Decimal
         """
-        self.x0 = x0
-        self.y0 = y0
-        self.x1 = x1
-        self.y1 = y1
+        self.x0 = min(x0, x1)
+        self.y0 = min(y0, y1)
+        self.x1 = max(x0, x1)
+        self.y1 = max(y0, y1)
 
     def has(self, x: Decimal, y: Decimal) -> bool:
-        """Checks if a point is within this boundingbox
+        """Checks if a point is within this bounding box
 
         Parameters
         ----------
         x : Decimal
         y : Decimal
         """
-        return (self.x0 < x and self.y0 < y) and (self.x1 > x and self.y1 > y)
+        between_mins = self.x0 < x and self.y0 < y
+        between_maxs = self.x1 > x and self.y1 > y
+        return between_mins and between_maxs
 
     def size(self) -> float:
         """Returns the size of the bounding box

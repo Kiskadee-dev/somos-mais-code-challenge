@@ -1,26 +1,13 @@
-from regions.boundingbox import BoundingBox
+from regions.tags import Tag
+from decimal import Decimal
+from regions.definitions.regiontypes import RegionTypes
 
 
-def test_boundingbox_size():
-    b = BoundingBox(0, 0, 10, 10)
-    assert b.size() == 10**2
+def test_get_tag():
+    especial = (Decimal("-2.20"), Decimal("-40.276938"))
+    tag = Tag.get_tag(especial[0], especial[1])
+    assert tag == RegionTypes.ESPECIAL
 
-    b = BoundingBox(10, 10, 10, 10)
-    assert b.size() == 0
-
-    b = BoundingBox(-10, -10, 0, 0)
-    assert b.size() == 10**2
-
-
-def test_boundingbox_has():
-    b = BoundingBox(0, 0, 10, 10)
-    assert b.has(5, 5) is True
-    assert b.has(0.01, 9.9) is True
-    assert b.has(0, 0) is False
-    assert b.has(10, 10) is False
-
-    b = BoundingBox(-10, -10, 0, 0)
-    assert b.has(-5, -5) is True
-    assert b.has(-0.01, -9.9) is True
-    assert b.has(0, 0) is False
-    assert b.has(10, 10) is False
+    trabalhoso = (Decimal("-200.20"), Decimal("-400.276938"))
+    tag = Tag.get_tag(trabalhoso[0], trabalhoso[1])
+    assert tag == RegionTypes.TRABALHOSO

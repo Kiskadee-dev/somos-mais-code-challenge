@@ -1,10 +1,13 @@
 from decimal import Decimal
 from regions.definitions.regiontypes import RegionTypes
+from regions.regions import Regions
+from regions.boundingbox import BoundingBox
+from typing import Tuple, Optional
 
 
 class Tag:
     @staticmethod
-    def find_tag(lat: Decimal, lon: Decimal) -> RegionTypes:
+    def get_tag(lon: Decimal, lat: Decimal) -> RegionTypes:
         """Given a point in space, determine which boundary contains it and return
         the appropriate tag.
 
@@ -21,4 +24,17 @@ class Tag:
         Returns:
             RegionTypes: The tag
         """
-        raise NotImplementedError()
+        regions = Regions.get_instance().regions
+
+        default_tag = RegionTypes.TRABALHOSO
+        smallest: Optional[Tuple[RegionTypes, BoundingBox]] = None
+        for key, values in regions.items():
+            boundaries = [boundary for boundary in values if boundary.has(x=lon, y=lat)]
+            if len(boundaries) == 0:
+                continue
+
+            boundaries.sort(key=lambda x: x.size())
+            if smallest is None or boundaries[0].size() < smallest[1].size():
+                smallest = (key, boundaries[0])
+
+        return default_tag if smallest is None else smallest[0]
