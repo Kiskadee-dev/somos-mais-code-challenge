@@ -1,5 +1,5 @@
 from decimal import Decimal
-from regions.definitions.regiontypes import RegionTypes
+from regions.definitions.regiontypes import RegionTypes, Countries
 from regions.regions import Regions
 from regions.boundingbox import BoundingBox
 from typing import Tuple, Optional
@@ -7,7 +7,7 @@ from typing import Tuple, Optional
 
 class Tag:
     @staticmethod
-    def get_tag(lon: Decimal, lat: Decimal) -> RegionTypes:
+    def get_tag(lon: Decimal, lat: Decimal, country=Countries.Brazil) -> RegionTypes:
         """Given a point in space, determine which boundary contains it and return
         the appropriate tag.
 
@@ -24,7 +24,7 @@ class Tag:
         Returns:
             RegionTypes: The tag
         """
-        regions = Regions.get_instance().regions
+        regions = Regions.get_instance().regions[country]
 
         default_tag = RegionTypes.TRABALHOSO
         smallest: Optional[Tuple[RegionTypes, BoundingBox]] = None

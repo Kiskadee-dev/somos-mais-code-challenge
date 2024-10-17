@@ -4,7 +4,7 @@ from math import floor
 from typing import Dict, List
 
 from regions.boundingbox import BoundingBox
-from regions.definitions.regiontypes import RegionTypes
+from regions.definitions.regiontypes import RegionTypes, Countries
 from regions.definitions.values import VALUES
 
 
@@ -18,25 +18,29 @@ class Regions:
         Due to a typo in the requirements file I'll use regex so its more generic than a simple split.
         """
 
-        self.regions: Dict[RegionTypes, List[BoundingBox]] = {}
+        self.regions: Dict[Countries, Dict[RegionTypes, List[BoundingBox]]] = {}
         pattern = r"(-?\d+.?\d+)"
-        for key, definition in VALUES.items():
-            if key not in self.regions:
-                self.regions[key] = []
+        for country, country_regions in VALUES.items():
+            if country not in self.regions:
+                self.regions[country] = {}
 
-            matches = re.findall(pattern, definition)
-            assert len(matches) % 4 == 0, f"Malformed region file: {key}"
+            for key, definition in country_regions.items():
+                if key not in self.regions[country]:
+                    self.regions[country][key] = []
 
-            for i in range(floor(len(matches) / 4)):
-                bounding = BoundingBox(
-                    Decimal(
-                        matches[0 + (i * 4)],
-                    ),
-                    Decimal(matches[1 + (i * 4)]),
-                    Decimal(matches[2 + (i * 4)]),
-                    Decimal(matches[3 + (i * 4)]),
-                )
-                self.regions[key].append(bounding)
+                matches = re.findall(pattern, definition)
+                assert len(matches) % 4 == 0, f"Malformed region file: {key}"
+
+                for i in range(floor(len(matches) / 4)):
+                    bounding = BoundingBox(
+                        Decimal(
+                            matches[0 + (i * 4)],
+                        ),
+                        Decimal(matches[1 + (i * 4)]),
+                        Decimal(matches[2 + (i * 4)]),
+                        Decimal(matches[3 + (i * 4)]),
+                    )
+                    self.regions[country][key].append(bounding)
 
     @classmethod
     def get_instance(cls):
