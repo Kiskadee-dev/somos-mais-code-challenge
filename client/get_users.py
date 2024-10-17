@@ -9,7 +9,7 @@ async def get_users() -> list[UserModel]:
 
     Raises:
         Exception:
-        NotImplementedError
+        RequestFailed
     """
     async with httpx.AsyncClient() as client:
         response = await client.get(EndpointRepo.users.value)
