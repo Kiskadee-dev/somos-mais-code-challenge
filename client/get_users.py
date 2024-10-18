@@ -16,4 +16,4 @@ async def get_users() -> list[UserModel]:
         if response.status_code != 200:
             raise RequestFailed(f"{response.status_code}, {response.content}")
         data = response.json()
-        return [UserModel.model_validate(user) for user in data["response"]]
+        return [UserModel.model_validate(user) for user in data["results"]]
