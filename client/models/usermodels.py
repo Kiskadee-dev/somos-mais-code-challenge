@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, HttpUrl, Field, BeforeValidator
-from typing import Annotated, Optional
+from typing import Annotated, Literal, Optional
 from decimal import Decimal
 from datetime import datetime
 from client.phone_conversion import convert_br_to_e164
@@ -46,12 +46,40 @@ class UserPicture(BaseModel):
 
 
 class UserModel(BaseModel):
-    gender: str  # TODO: Migrate to M or F
+    def migrate_gender(gender: str) -> str:
+        """
+        Migrates a gender string to its corresponding code as defined by ISO/IEC 5218:
+        - M = Male;
+        - F = Female;
+        - O = Other (for non-binary, unknown, or unspecified genders).
+
+        Currently, the system uses 'M', 'F', and 'O' for gender representation.
+        However, ISO/IEC 5218 defines a standard for gender encoding that might be
+        considered for future improvements.
+
+        Args:
+            gender (str): gender to be migrated
+
+        Returns:
+            str: Char representing the gender
+        """
+        if len(gender) == 1:
+            return gender
+        match gender.lower():
+            case "male":
+                return "M"
+            case "female":
+                return "F"
+            case _:
+                return "O"
+
+    gender: Annotated[str, BeforeValidator(migrate_gender), Literal["M", "F", "O"]]
     name: UserName
     location: UserLocation
 
     def sanitize_email(email: str) -> str:
-        """The given dataset doesn't seem to provide properly sanitized emails
+        """
+        The given dataset doesn't seem to provide properly sanitized emails
         This replaces any space or chain of spaces into a dot
         Eg: Use r@example.com becomes Use.r@example.com
         Eg2: Use .r@example.com becomes Use.r@example.com

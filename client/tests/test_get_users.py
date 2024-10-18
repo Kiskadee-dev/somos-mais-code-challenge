@@ -15,3 +15,14 @@ async def test_get_users():
     )
     result = await get_users()
     assert len(result) > 0
+
+
+@pytest.mark.asyncio
+@respx.mock
+async def test_gender_conversion():
+    respx.get(EndpointRepo.users.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content())
+    )
+    result = await get_users()
+    for user in result:
+        assert user.gender in ["M", "F", "O"]
