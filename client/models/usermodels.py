@@ -1,7 +1,16 @@
-from pydantic import BaseModel, EmailStr, HttpUrl, Field, BeforeValidator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    EmailStr,
+    HttpUrl,
+    Field,
+    BeforeValidator,
+    ValidationError,
+)
 from typing import Annotated, Literal, Optional
 from decimal import Decimal
 from datetime import datetime
+
 from client.phone_conversion import convert_br_to_e164
 import re
 
@@ -18,7 +27,27 @@ class UserCoordinates(BaseModel):
 
 
 class UserTimezone(BaseModel):
-    offset: str  # TODO: validate
+    def validate_offset(offset: str) -> None:
+        pattern = r"0{1,2}:0{2}"
+        has_match = re.match(pattern, offset)
+        if has_match is not None:
+            return
+
+        pattern = r"[-+]\d{1,2}:\d{2}"
+        has_match = re.match(pattern, offset)
+        if has_match is None:
+            raise ValidationError(f"Invalid timezone offset {offset}")
+
+        pattern = r"[-+](\d{1,2}):(\d{2})"
+        times = re.findall(pattern, offset)
+        assert len(times) == 1
+        hour, minutes = times[0]
+        hour = int(hour)
+        minutes = int(minutes)
+        assert hour >= 0 and hour <= 23
+        assert minutes >= 0 and minutes < 60
+
+    offset: Annotated[str, AfterValidator(validate_offset)]
     description: str
 
 
