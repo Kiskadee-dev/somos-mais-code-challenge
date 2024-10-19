@@ -1,4 +1,7 @@
 from decimal import Decimal
+
+from pytest import raises
+from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.get_users import get_users
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.client.tests.mock.load_mock_response import (
@@ -11,7 +14,15 @@ from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
 
 
 @respx.mock(assert_all_called=True)
-# @pytest.mark.skip(reason="Must implement it along the user model")
+def test_get_users_not_found(respx_mock):
+    respx_mock.get(EndpointRepo.users.value).mock(
+        return_value=Response(status_code=404)
+    )
+    with raises(RequestFailed):
+        get_users()
+
+
+@respx.mock(assert_all_called=True)
 def test_get_users(respx_mock):
     respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())

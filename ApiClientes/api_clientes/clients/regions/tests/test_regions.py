@@ -11,3 +11,4 @@ def test_regions():
     assert Countries.Brazil in regs.regions
     especial = regs.regions[Countries.Brazil][RegionTypes.ESPECIAL]
     assert len(especial) > 1, "Especial has more than one region defined"
+    assert RegionTypes.NORMAL in regs.regions[Countries.Brazil]
