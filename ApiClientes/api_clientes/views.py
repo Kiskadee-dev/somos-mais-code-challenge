@@ -1,14 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from api_clientes.pagination import CustomPagination
 from api_clientes.serializers import ListOfUsersSerializer
 from api_clientes.clients.client.get_users import get_users
-from rest_framework.pagination import LimitOffsetPagination
 
 
 class Clientes(APIView):
     serializer_class = ListOfUsersSerializer
-    pagination_class = LimitOffsetPagination
+    pagination_class = CustomPagination
 
     def get(self, request):
         users = get_users()
