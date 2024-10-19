@@ -23,6 +23,5 @@ def test_get_users(respx_mock):
     assert "totalCount" in content
     assert "pageNumber" in content
     assert "pageSize" in content
-    # TODO: Nest response data into field named users
-    # assert "users" in content
-    # assert len(content["users"]) > 0
+    assert "users" in content["results"]
+    assert len(content["results"]["users"]) > 0

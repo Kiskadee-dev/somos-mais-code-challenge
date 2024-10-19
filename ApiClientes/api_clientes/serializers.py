@@ -1,3 +1,4 @@
+from rest_framework.serializers import IntegerField, URLField
 from rest_framework import serializers
 
 
@@ -54,5 +55,15 @@ class UserModelSerializer(serializers.Serializer):
     picture = UserPictureSerializer()
 
 
-class ListOfUsersSerializer(serializers.ListSerializer):
-    child = UserModelSerializer()
+class ListOfUsersSerializer(serializers.Serializer):
+    users = UserModelSerializer(many=True)
+
+
+class ResponseSerializer(serializers.Serializer):
+    totalCount = IntegerField(read_only=True)
+    pageNumber = IntegerField(read_only=True)
+    totalPages = IntegerField(read_only=True)
+    pageSize = IntegerField(default=10)
+    next = URLField(required=False)
+    previous = URLField(required=False)
+    results = ListOfUsersSerializer()
