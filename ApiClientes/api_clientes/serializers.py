@@ -52,3 +52,7 @@ class UserModelSerializer(serializers.Serializer):
     )
     mobileNumbers = serializers.ListField(child=serializers.CharField(), source="cell")
     picture = UserPictureSerializer()
+
+
+class ListOfUsersSerializer(serializers.ListSerializer):
+    child = UserModelSerializer()
