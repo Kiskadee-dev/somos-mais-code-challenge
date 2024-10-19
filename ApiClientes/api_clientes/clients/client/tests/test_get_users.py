@@ -7,19 +7,19 @@ from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
 
 
-@respx.mock
+@respx.mock(assert_all_called=True)
 # @pytest.mark.skip(reason="Must implement it along the user model")
-def test_get_users():
-    respx.get(EndpointRepo.users.value).mock(
+def test_get_users(respx_mock):
+    respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
     result = get_users()
     assert len(result) > 0
 
 
-@respx.mock
-def test_gender_conversion():
-    respx.get(EndpointRepo.users.value).mock(
+@respx.mock(assert_all_called=True)
+def test_gender_conversion(respx_mock):
+    respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
     result = get_users()
