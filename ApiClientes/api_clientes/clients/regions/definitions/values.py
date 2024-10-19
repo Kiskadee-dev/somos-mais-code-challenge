@@ -1,4 +1,7 @@
-from regions.definitions.regiontypes import RegionTypes, Countries
+from ApiClientes.api_clientes.clients.regions.definitions.regiontypes import (
+    RegionTypes,
+    Countries,
+)
 
 VALUES = {
     Countries.Brazil: {

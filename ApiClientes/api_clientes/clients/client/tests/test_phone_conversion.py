@@ -1,4 +1,4 @@
-from client.phone_conversion import convert_br_to_e164
+from ApiClientes.api_clientes.clients.client.phone_conversion import convert_br_to_e164
 
 
 def test_convert_phone():

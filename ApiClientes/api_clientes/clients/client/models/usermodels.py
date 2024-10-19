@@ -11,7 +11,7 @@ from typing import Annotated, Literal, Optional
 from decimal import Decimal
 from datetime import datetime
 
-from client.phone_conversion import convert_br_to_e164
+from ApiClientes.api_clientes.clients.client.phone_conversion import convert_br_to_e164
 import re
 
 

@@ -1,7 +1,10 @@
 from decimal import Decimal
-from regions.definitions.regiontypes import RegionTypes, Countries
-from regions.regions import Regions
-from regions.boundingbox import BoundingBox
+from ApiClientes.api_clientes.clients.regions.definitions.regiontypes import (
+    RegionTypes,
+    Countries,
+)
+from ApiClientes.api_clientes.clients.regions.regions import Regions
+from ApiClientes.api_clientes.clients.regions.boundingbox import BoundingBox
 from typing import Tuple, Optional
 
 

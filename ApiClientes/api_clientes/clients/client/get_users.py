@@ -1,6 +1,6 @@
-from client.endpoints import EndpointRepo
-from client.exceptions import RequestFailed
-from client.models.usermodels import UserModel
+from ApiClientes.api_clientes.clients.client.endpoints import EndpointRepo
+from ApiClientes.api_clientes.clients.client.exceptions import RequestFailed
+from ApiClientes.api_clientes.clients.client.models.usermodels import UserModel
 import httpx
 
 
