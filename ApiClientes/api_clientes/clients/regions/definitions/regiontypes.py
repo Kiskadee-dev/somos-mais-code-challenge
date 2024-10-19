@@ -6,6 +6,6 @@ class Countries(Enum):
 
 
 class RegionTypes(Enum):
-    ESPECIAL = 0
-    NORMAL = 1
-    TRABALHOSO = 2
+    ESPECIAL = "special"
+    NORMAL = "normal"
+    TRABALHOSO = "laborious"

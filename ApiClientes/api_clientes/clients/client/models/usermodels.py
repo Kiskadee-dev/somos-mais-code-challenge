@@ -6,12 +6,14 @@ from pydantic import (
     Field,
     BeforeValidator,
     ValidationError,
+    computed_field,
 )
 from typing import Annotated, Literal
 from decimal import Decimal
 from datetime import datetime
 
 from api_clientes.clients.client.phone_conversion import convert_br_to_e164
+from api_clientes.clients.regions.tags import Tag
 import re
 
 
@@ -75,6 +77,13 @@ class UserPicture(BaseModel):
 
 
 class UserModel(BaseModel):
+    @computed_field
+    @property
+    def type(self) -> str:
+        return Tag.get_tag(
+            self.location.coordinates.longitude, self.location.coordinates.latitude
+        ).value
+
     def migrate_gender(gender: str) -> str:
         """
         Migrates a gender string to its corresponding code:
