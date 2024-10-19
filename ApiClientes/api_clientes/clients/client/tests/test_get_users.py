@@ -1,11 +1,11 @@
 import pytest
-from ApiClientes.api_clientes.clients.client.get_users import get_users
-from ApiClientes.api_clientes.clients.client.tests.mock.load_mock_response import (
+from api_clientes.clients.client.get_users import get_users
+from api_clientes.clients.client.tests.mock.load_mock_response import (
     get_mock_file_content,
 )
 import respx
 from httpx import Response
-from ApiClientes.api_clientes.clients.client.endpoints import EndpointRepo
+from api_clientes.clients.client.endpoints import EndpointRepo
 
 
 @pytest.mark.asyncio

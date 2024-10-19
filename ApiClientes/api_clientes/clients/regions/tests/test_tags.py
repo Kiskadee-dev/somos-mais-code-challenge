@@ -1,6 +1,6 @@
-from ApiClientes.api_clientes.clients.regions.tags import Tag
+from api_clientes.clients.regions.tags import Tag
 from decimal import Decimal
-from ApiClientes.api_clientes.clients.regions.definitions.regiontypes import RegionTypes
+from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
 
 
 def test_get_tag():

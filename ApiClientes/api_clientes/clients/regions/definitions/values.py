@@ -1,4 +1,4 @@
-from ApiClientes.api_clientes.clients.regions.definitions.regiontypes import (
+from api_clientes.clients.regions.definitions.regiontypes import (
     RegionTypes,
     Countries,
 )

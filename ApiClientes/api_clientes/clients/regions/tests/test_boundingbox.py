@@ -1,4 +1,4 @@
-from ApiClientes.api_clientes.clients.regions.boundingbox import BoundingBox
+from api_clientes.clients.regions.boundingbox import BoundingBox
 
 
 def test_boundingbox_size():

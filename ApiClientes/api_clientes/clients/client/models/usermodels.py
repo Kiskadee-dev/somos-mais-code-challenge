@@ -7,11 +7,11 @@ from pydantic import (
     BeforeValidator,
     ValidationError,
 )
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal
 from decimal import Decimal
 from datetime import datetime
 
-from ApiClientes.api_clientes.clients.client.phone_conversion import convert_br_to_e164
+from api_clientes.clients.client.phone_conversion import convert_br_to_e164
 import re
 
 
@@ -22,8 +22,8 @@ class UserName(BaseModel):
 
 
 class UserCoordinates(BaseModel):
-    latitude: Optional[Decimal] = None
-    longitude: Optional[Decimal] = None
+    latitude: Decimal
+    longitude: Decimal
 
 
 class UserTimezone(BaseModel):
@@ -77,7 +77,7 @@ class UserPicture(BaseModel):
 class UserModel(BaseModel):
     def migrate_gender(gender: str) -> str:
         """
-        Migrates a gender string to its corresponding code as defined by ISO/IEC 5218:
+        Migrates a gender string to its corresponding code:
         - M = Male;
         - F = Female;
         - O = Other (for non-binary, unknown, or unspecified genders).

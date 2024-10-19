@@ -3,12 +3,12 @@ from decimal import Decimal
 from math import floor
 from typing import Dict, List
 
-from ApiClientes.api_clientes.clients.regions.boundingbox import BoundingBox
-from ApiClientes.api_clientes.clients.regions.definitions.regiontypes import (
+from api_clientes.clients.regions.boundingbox import BoundingBox
+from api_clientes.clients.regions.definitions.regiontypes import (
     RegionTypes,
     Countries,
 )
-from ApiClientes.api_clientes.clients.regions.definitions.values import VALUES
+from api_clientes.clients.regions.definitions.values import VALUES
 
 
 class Regions:

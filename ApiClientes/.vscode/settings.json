@@ -1,6 +1,6 @@
 {
     "python.testing.pytestArgs": [
-        "ApiClientes"
+        "api_clientes"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
