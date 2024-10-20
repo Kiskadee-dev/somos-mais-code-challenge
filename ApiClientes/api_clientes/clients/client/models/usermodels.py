@@ -62,14 +62,6 @@ class UserLocation(BaseModel):
     timezone: UserTimezone
 
 
-class UserDateOfBirth(BaseModel):
-    date: datetime
-
-
-class UserRegistered(BaseModel):
-    date: datetime
-
-
 class UserPicture(BaseModel):
     large: HttpUrl
     medium: HttpUrl
