@@ -90,3 +90,4 @@ def test_user_attrs(respx_mock):
         assert type(user.birthday) is datetime
         assert hasattr(user, "registered")
         assert type(user.registered) is datetime
+        assert hasattr(user.location, "region")

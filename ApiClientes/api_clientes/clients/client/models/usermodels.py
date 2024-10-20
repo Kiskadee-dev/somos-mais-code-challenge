@@ -12,6 +12,7 @@ from typing import Annotated, Literal
 from decimal import Decimal
 from datetime import datetime
 
+from api_clientes.clients.client.locations import find_region
 from api_clientes.clients.client.phone_conversion import convert_br_to_e164
 from api_clientes.clients.regions.tags import Tag
 import re
@@ -54,6 +55,13 @@ class UserTimezone(BaseModel):
 
 
 class UserLocation(BaseModel):
+    @computed_field
+    @property
+    def region(self) -> str:
+        region = find_region(self.state)
+        assert region is not None
+        return region.value
+
     street: str
     city: str
     state: str
