@@ -5,17 +5,19 @@ import httpx
 import asyncio
 import csv
 from io import StringIO
+from api_clientes.clients.client.expand_csv import expand_flattened_dict
 
 
-async def validate(data: dict) -> list[UserModel]:
+def validate(data: dict) -> list[UserModel]:
     validated_data = [UserModel.model_validate(user) for user in data]
     return validated_data
 
 
-async def validate_csv(data: str) -> list[UserModel]:
+def validate_csv(data: str) -> list[UserModel]:
     csv_file = StringIO(data)
     reader = csv.DictReader(csv_file)
-    validated_data = [UserModel.model_validate(user) for user in reader]
+    expanded = (expand_flattened_dict(flattened) for flattened in reader)
+    validated_data = [UserModel.model_validate(user) for user in expanded]
     return validated_data
 
 
@@ -39,10 +41,9 @@ async def get_users() -> list[UserModel]:
                 )
 
         json_data = response_1.json()
-        validated_data = await asyncio.gather(
+        validated_json_data, validated_csv_data = (
             validate(json_data["results"]),
-            # validate_csv(response_2.content.decode("utf-8").lstrip("\ufeff")),
+            validate_csv(response_2.content.decode("utf-8")),
         )
 
-        # TODO: Merge json with csv
-        return validated_data[0]
+        return validated_json_data + validated_csv_data

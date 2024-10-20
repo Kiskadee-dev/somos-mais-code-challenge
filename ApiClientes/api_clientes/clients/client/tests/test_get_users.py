@@ -36,7 +36,7 @@ def test_get_users(respx_mock):
         return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     result = DataRepo().get_data()
-    assert len(result) > 0
+    assert len(result) == 2000
 
 
 @respx.mock(assert_all_called=True)
