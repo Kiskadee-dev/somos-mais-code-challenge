@@ -134,8 +134,15 @@ class UserModel(BaseModel):
         return f"{sanitized_name}@{domain}"
 
     email: Annotated[EmailStr, BeforeValidator(sanitize_email)]
-    dob: UserDateOfBirth
-    registered: UserRegistered
+
+    def migrate_dates(date: str | dict):
+        if type(date) is str:
+            return date
+        assert "date" in date
+        return date["date"]
+
+    birthday: Annotated[datetime, BeforeValidator(migrate_dates), Field(alias="dob")]
+    registered: Annotated[datetime, BeforeValidator(migrate_dates)]
 
     def migrate_phone_format(phone: list[str] | str) -> list[str]:
         if type(phone) is str:
@@ -149,3 +156,4 @@ class UserModel(BaseModel):
         list[str], Field(alias="cell"), BeforeValidator(migrate_phone_format)
     ]
     picture: UserPicture
+    nationality: str = "BR"

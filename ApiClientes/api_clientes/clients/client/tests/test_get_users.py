@@ -11,6 +11,7 @@ import respx
 from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
+from datetime import datetime
 
 
 @respx.mock(assert_all_called=True)
@@ -74,3 +75,18 @@ def test_user_region(respx_mock):
 
     u.location.coordinates.longitude, u.location.coordinates.latitude = trabalhoso
     assert RegionTypes(u.type) == RegionTypes.TRABALHOSO
+
+
+@respx.mock(assert_all_called=True)
+def test_user_attrs(respx_mock):
+    respx_mock.get(EndpointRepo.users.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content())
+    )
+    result = get_users()
+    for user in result:
+        assert hasattr(user, "nationality")
+        assert hasattr(user, "type")
+        assert hasattr(user, "birthday")
+        assert type(user.birthday) is datetime
+        assert hasattr(user, "registered")
+        assert type(user.registered) is datetime
