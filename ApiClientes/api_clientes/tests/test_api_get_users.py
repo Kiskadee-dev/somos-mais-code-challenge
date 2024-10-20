@@ -5,7 +5,8 @@ from django.urls import reverse
 
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.client.tests.mock.load_mock_response import (
-    get_mock_file_content,
+    get_mock_file_content_csv,
+    get_mock_file_content_json,
 )
 
 
@@ -13,8 +14,11 @@ from api_clientes.clients.client.tests.mock.load_mock_response import (
 def test_get_users(respx_mock):
     client = APIClient()
     url = reverse("users")
-    respx_mock.get(EndpointRepo.users.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content())
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_json())
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     response = client.get(url)
 

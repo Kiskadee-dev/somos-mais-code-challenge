@@ -4,7 +4,8 @@ from pytest import raises
 from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.client.tests.mock.load_mock_response import (
-    get_mock_file_content,
+    get_mock_file_content_json,
+    get_mock_file_content_csv,
 )
 import respx
 from httpx import Response
@@ -16,7 +17,10 @@ from datetime import datetime
 
 @respx.mock(assert_all_called=True)
 def test_get_users_not_found(respx_mock):
-    respx_mock.get(EndpointRepo.users.value).mock(
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=404)
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
         return_value=Response(status_code=404)
     )
     with raises(RequestFailed):
@@ -25,8 +29,11 @@ def test_get_users_not_found(respx_mock):
 
 @respx.mock(assert_all_called=True)
 def test_get_users(respx_mock):
-    respx_mock.get(EndpointRepo.users.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content())
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_json())
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     result = DataRepo().get_data()
     assert len(result) > 0
@@ -34,8 +41,11 @@ def test_get_users(respx_mock):
 
 @respx.mock(assert_all_called=True)
 def test_gender_conversion(respx_mock):
-    respx_mock.get(EndpointRepo.users.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content())
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_json())
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     result = DataRepo().get_data()
     for user in result:
@@ -44,8 +54,11 @@ def test_gender_conversion(respx_mock):
 
 @respx.mock(assert_all_called=True)
 def test_user_region(respx_mock):
-    respx_mock.get(EndpointRepo.users.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content())
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_json())
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     result = DataRepo().get_data()
 
@@ -79,8 +92,11 @@ def test_user_region(respx_mock):
 
 @respx.mock(assert_all_called=True)
 def test_user_attrs(respx_mock):
-    respx_mock.get(EndpointRepo.users.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content())
+    respx_mock.get(EndpointRepo.users_json.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_json())
+    )
+    respx_mock.get(EndpointRepo.users_csv.value).mock(
+        return_value=Response(status_code=200, content=get_mock_file_content_csv())
     )
     result = DataRepo().get_data()
     for user in result:

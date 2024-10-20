@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 from api_clientes.clients.client.get_users import get_users
 from api_clientes.clients.client.models.usermodels import UserModel
@@ -20,7 +21,7 @@ class DataRepo:
 
     def get_data(self) -> list[UserModel]:
         """
-        Gets the data from the source or the cached version
+        Gets data from source or the cached version
         #TODO: Cache with redis for deployment
 
         Returns:
@@ -28,5 +29,7 @@ class DataRepo:
         """
         if self._data is None and self.initialized is False:
             self.initialized = True
-            self._data = get_users()
+
+            loop = asyncio.get_event_loop()
+            self._data = loop.run_until_complete(get_users())
         return self._data
