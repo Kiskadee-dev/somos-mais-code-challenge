@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from api_clientes.clients.datarepo import DataRepo
 from api_clientes.pagination import CustomPagination
 from api_clientes.serializers import ResponseSerializer
-from api_clientes.clients.client.get_users import get_users
 
 
 class Clientes(APIView):
@@ -11,7 +11,7 @@ class Clientes(APIView):
     pagination_class = CustomPagination
 
     def get(self, request):
-        users = get_users()
+        users = DataRepo().get_data()
         pagination = self.pagination_class()
         paginated_users = pagination.paginate_queryset(users, request)
 

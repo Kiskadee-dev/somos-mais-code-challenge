@@ -2,7 +2,6 @@ from decimal import Decimal
 
 from pytest import raises
 from api_clientes.clients.client.exceptions import RequestFailed
-from api_clientes.clients.client.get_users import get_users
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.client.tests.mock.load_mock_response import (
     get_mock_file_content,
@@ -11,6 +10,7 @@ import respx
 from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
+from api_clientes.clients.datarepo import DataRepo
 from datetime import datetime
 
 
@@ -20,7 +20,7 @@ def test_get_users_not_found(respx_mock):
         return_value=Response(status_code=404)
     )
     with raises(RequestFailed):
-        get_users()
+        DataRepo().get_data()
 
 
 @respx.mock(assert_all_called=True)
@@ -28,7 +28,7 @@ def test_get_users(respx_mock):
     respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
-    result = get_users()
+    result = DataRepo().get_data()
     assert len(result) > 0
 
 
@@ -37,7 +37,7 @@ def test_gender_conversion(respx_mock):
     respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
-    result = get_users()
+    result = DataRepo().get_data()
     for user in result:
         assert user.gender in ["M", "F", "O"]
 
@@ -47,7 +47,7 @@ def test_user_region(respx_mock):
     respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
-    result = get_users()
+    result = DataRepo().get_data()
 
     user_by_type: dict[str, list[UserModel]] = {}
     for user in result:
@@ -82,7 +82,7 @@ def test_user_attrs(respx_mock):
     respx_mock.get(EndpointRepo.users.value).mock(
         return_value=Response(status_code=200, content=get_mock_file_content())
     )
-    result = get_users()
+    result = DataRepo().get_data()
     for user in result:
         assert hasattr(user, "nationality")
         assert hasattr(user, "type")
