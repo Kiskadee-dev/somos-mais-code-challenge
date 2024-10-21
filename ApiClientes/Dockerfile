@@ -23,4 +23,4 @@ COPY . ./app
 WORKDIR /app/
 EXPOSE 8080
 ENV TESTING=False
-ENTRYPOINT ["python", "-u", "manage.py", "runserver"]
+ENTRYPOINT ["python", "-u", "manage.py", "runserver", "0.0.0.0:8000"]

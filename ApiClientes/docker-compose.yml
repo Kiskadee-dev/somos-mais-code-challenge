@@ -17,8 +17,10 @@ services:
     build: .
     image: localhost/case
     container_name: case-api
+    ports:
+    - "127.0.0.1:8081:8000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
       interval: 1m30s
       timeout: 10s
       retries: 3
