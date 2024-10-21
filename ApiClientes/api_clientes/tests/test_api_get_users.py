@@ -29,3 +29,7 @@ def test_get_users(respx_mock):
     assert "pageSize" in content
     assert "users" in content["results"]
     assert len(content["results"]["users"]) > 0
+
+    # TODO: Fix pagination to include one ident
+    # has_match = re.match(r"users: ", response.content.decode("utf-8"))
+    # assert has_match is not None

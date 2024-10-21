@@ -29,7 +29,8 @@ class DataRepo:
         """
         if self._data is None and self.initialized is False:
             self.initialized = True
-
-            loop = asyncio.get_event_loop()
-            self._data = loop.run_until_complete(get_users())
+            print("Downloading new data")
+            self._data = asyncio.run(get_users())
+        else:
+            print("Cached!")
         return self._data
