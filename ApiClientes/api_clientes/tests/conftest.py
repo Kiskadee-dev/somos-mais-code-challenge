@@ -8,7 +8,7 @@ from api_clientes.clients.client.tests.mock.load_mock_response import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def respx_fixture():
     with respx.mock(assert_all_called=True) as respx_mock:
         print("Patching respx")

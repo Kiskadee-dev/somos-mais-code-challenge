@@ -11,7 +11,7 @@ from api_clientes.clients.client.tests.mock.load_mock_response import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def respx_fixture():
     with respx.mock(assert_all_called=True) as respx_mock:
         print("Patching respx")
@@ -24,7 +24,7 @@ def respx_fixture():
         yield respx_mock
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def redis_client(request, mocker):
     fake_redis = fakeredis.FakeRedis()
     fake_redis.flushall()

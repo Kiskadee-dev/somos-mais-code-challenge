@@ -57,11 +57,13 @@ class DataRepo:
             while self.redis.get(self.REDIS_LOCK_KEY):
                 time.sleep(0.1)
             return self.get_data()
+
+        print("Fetching new data.")
         users = asyncio.run(get_users())
         flattened_data = [
             flatten_pydantic.flatten_pydantic(u, by_alias=True) for u in users
         ]
-        print("Saving data")
+        print("Saving cache data.")
         self.redis.set(self.REDIS_CACHE_KEY, json.dumps(flattened_data, default=str))
         self.redis.delete(self.REDIS_LOCK_KEY)
         return users
