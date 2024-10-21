@@ -3,10 +3,6 @@ from decimal import Decimal
 from pytest import raises
 from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.models.usermodels import UserModel
-from api_clientes.clients.client.tests.mock.load_mock_response import (
-    get_mock_file_content_json,
-    get_mock_file_content_csv,
-)
 import respx
 from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
@@ -27,39 +23,18 @@ def test_get_users_not_found(respx_mock):
         DataRepo().get_data()
 
 
-@respx.mock(assert_all_called=True)
-def test_get_users(respx_mock):
-    respx_mock.get(EndpointRepo.users_json.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_json())
-    )
-    respx_mock.get(EndpointRepo.users_csv.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_csv())
-    )
+def test_get_users(respx_fixture):
     result = DataRepo().get_data()
     assert len(result) == 2000
 
 
-@respx.mock(assert_all_called=True)
-def test_gender_conversion(respx_mock):
-    respx_mock.get(EndpointRepo.users_json.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_json())
-    )
-    respx_mock.get(EndpointRepo.users_csv.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_csv())
-    )
+def test_gender_conversion(respx_fixture):
     result = DataRepo().get_data()
     for user in result:
         assert user.gender in ["M", "F", "O"]
 
 
-@respx.mock(assert_all_called=True)
-def test_user_region(respx_mock):
-    respx_mock.get(EndpointRepo.users_json.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_json())
-    )
-    respx_mock.get(EndpointRepo.users_csv.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_csv())
-    )
+def test_user_region(respx_fixture):
     result = DataRepo().get_data()
 
     user_by_type: dict[str, list[UserModel]] = {}
@@ -90,14 +65,7 @@ def test_user_region(respx_mock):
     assert RegionTypes(u.type) == RegionTypes.TRABALHOSO
 
 
-@respx.mock(assert_all_called=True)
-def test_user_attrs(respx_mock):
-    respx_mock.get(EndpointRepo.users_json.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_json())
-    )
-    respx_mock.get(EndpointRepo.users_csv.value).mock(
-        return_value=Response(status_code=200, content=get_mock_file_content_csv())
-    )
+def test_user_attrs(respx_fixture):
     result = DataRepo().get_data()
     for user in result:
         assert hasattr(user, "nationality")
