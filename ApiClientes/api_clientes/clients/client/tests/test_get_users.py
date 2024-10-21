@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from pytest import raises
+import api_clientes
 from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.models.usermodels import UserModel
 import respx
@@ -12,7 +13,7 @@ from datetime import datetime
 
 
 @respx.mock(assert_all_called=True)
-def test_get_users_not_found(respx_mock):
+def test_get_users_not_found(respx_mock, redis_client):
     respx_mock.get(EndpointRepo.users_json.value).mock(
         return_value=Response(status_code=404)
     )
@@ -20,22 +21,22 @@ def test_get_users_not_found(respx_mock):
         return_value=Response(status_code=404)
     )
     with raises(RequestFailed):
-        DataRepo().get_data()
+        DataRepo(api_clientes.redis_conn).get_data()
 
 
-def test_get_users(respx_fixture):
-    result = DataRepo().get_data()
+def test_get_users(respx_fixture, redis_client):
+    result = DataRepo(api_clientes.redis_conn).get_data()
     assert len(result) == 2000
 
 
-def test_gender_conversion(respx_fixture):
-    result = DataRepo().get_data()
+def test_gender_conversion(respx_fixture, redis_client):
+    result = DataRepo(api_clientes.redis_conn).get_data()
     for user in result:
         assert user.gender in ["M", "F", "O"]
 
 
-def test_user_region(respx_fixture):
-    result = DataRepo().get_data()
+def test_user_region(respx_fixture, redis_client):
+    result = DataRepo(api_clientes.redis_conn).get_data()
 
     user_by_type: dict[str, list[UserModel]] = {}
     for user in result:
@@ -65,8 +66,8 @@ def test_user_region(respx_fixture):
     assert RegionTypes(u.type) == RegionTypes.TRABALHOSO
 
 
-def test_user_attrs(respx_fixture):
-    result = DataRepo().get_data()
+def test_user_attrs(respx_fixture, redis_client):
+    result = DataRepo(api_clientes.redis_conn).get_data()
     for user in result:
         assert hasattr(user, "nationality")
         assert hasattr(user, "type")

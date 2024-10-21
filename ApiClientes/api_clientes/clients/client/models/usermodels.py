@@ -1,5 +1,4 @@
 from pydantic import (
-    AfterValidator,
     BaseModel,
     EmailStr,
     HttpUrl,
@@ -31,10 +30,12 @@ class UserCoordinates(BaseModel):
 
 class UserTimezone(BaseModel):
     def validate_offset(offset: str) -> None:
+        assert type(offset) is str
+
         pattern = r"0{1,2}:0{2}"
         has_match = re.match(pattern, offset)
         if has_match is not None:
-            return
+            return offset
 
         pattern = r"[-+]\d{1,2}:\d{2}"
         has_match = re.match(pattern, offset)
@@ -47,10 +48,11 @@ class UserTimezone(BaseModel):
         hour, minutes = times[0]
         hour = int(hour)
         minutes = int(minutes)
-        assert hour >= 0 and hour <= 23
+        assert (hour >= 0 and hour <= 23) or (hour <= 0 and hour >= -23)
         assert minutes >= 0 and minutes < 60
+        return offset
 
-    offset: Annotated[str, AfterValidator(validate_offset)]
+    offset: Annotated[str, BeforeValidator(validate_offset)]
     description: str
 
 
@@ -71,9 +73,13 @@ class UserLocation(BaseModel):
 
 
 class UserPicture(BaseModel):
-    large: HttpUrl
-    medium: HttpUrl
-    thumbnail: HttpUrl
+    def validate(url) -> str:
+        valid_url = HttpUrl(url)
+        return str(valid_url)
+
+    large: Annotated[str, BeforeValidator(validate)]
+    medium: Annotated[str, BeforeValidator(validate)]
+    thumbnail: Annotated[str, BeforeValidator(validate)]
 
 
 class UserModel(BaseModel):

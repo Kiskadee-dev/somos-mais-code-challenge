@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import api_clientes
 from api_clientes.clients.datarepo import DataRepo
 from api_clientes.pagination import CustomPagination
 from api_clientes.serializers import ResponseSerializer
@@ -15,7 +16,7 @@ class Clientes(APIView):
 
     def get(self, request):
         start = timeit.default_timer()
-        users = DataRepo().get_data()
+        users = DataRepo(api_clientes.redis_conn).get_data()
         print("The difference of time is :", timeit.default_timer() - start)
         pagination = self.pagination_class()
         paginated_users = pagination.paginate_queryset(users, request)
