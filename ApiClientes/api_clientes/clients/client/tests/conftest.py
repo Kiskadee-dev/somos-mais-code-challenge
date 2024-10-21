@@ -29,5 +29,7 @@ def redis_client(request, mocker):
     fake_redis = fakeredis.FakeRedis()
     fake_redis.flushall()
     mocker.patch("api_clientes.redis_conn", new=fake_redis)
+    mocker.patch("api_clientes.get_redis_connection", return_result=fake_redis)
+
     yield fake_redis
     fake_redis.flushall()
