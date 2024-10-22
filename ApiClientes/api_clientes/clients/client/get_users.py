@@ -6,6 +6,10 @@ import asyncio
 import csv
 from io import StringIO
 from api_clientes.clients.client.expand_csv import expand_flattened_dict
+from api_clientes.clients.client.tests.mock.load_mock_response import (
+    get_mock_file_content_csv,
+    get_mock_file_content_json,
+)
 
 
 def validate(data: dict) -> list[UserModel]:
@@ -21,7 +25,7 @@ def validate_csv(data: str) -> list[UserModel]:
     return validated_data
 
 
-async def get_users() -> list[UserModel]:
+async def get_users(mocked=False) -> list[UserModel]:
     """Get users and validate
 
     Raises:
@@ -29,10 +33,18 @@ async def get_users() -> list[UserModel]:
         RequestFailed
     """
     async with httpx.AsyncClient() as client:
-        response_1_coro = client.get(EndpointRepo.users_json.value)
-        response_2_coro = client.get(EndpointRepo.users_csv.value)
+        if mocked:
+            response_1, response_2 = (
+                httpx.Response(status_code=200, content=get_mock_file_content_json()),
+                httpx.Response(status_code=200, content=get_mock_file_content_csv()),
+            )
+        else:
+            response_1_coro = client.get(EndpointRepo.users_json.value)
+            response_2_coro = client.get(EndpointRepo.users_csv.value)
 
-        response_1, response_2 = await asyncio.gather(response_1_coro, response_2_coro)
+            response_1, response_2 = await asyncio.gather(
+                response_1_coro, response_2_coro
+            )
 
         for response in [response_1, response_2]:
             if response.status_code != 200:

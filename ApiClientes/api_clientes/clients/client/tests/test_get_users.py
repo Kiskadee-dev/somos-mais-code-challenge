@@ -1,10 +1,10 @@
 from decimal import Decimal
+import os
 
 from pytest import raises
 import api_clientes
 from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.models.usermodels import UserModel
-import respx
 from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
@@ -12,14 +12,21 @@ from api_clientes.clients.datarepo import DataRepo
 from datetime import datetime
 
 
-@respx.mock(assert_all_called=True)
-def test_get_users_not_found(respx_mock, redis_client):
+def test_get_users_not_found(mocker, respx_mock, redis_client):
     respx_mock.get(EndpointRepo.users_json.value).mock(
         return_value=Response(status_code=404)
     )
     respx_mock.get(EndpointRepo.users_csv.value).mock(
         return_value=Response(status_code=404)
     )
+    original_os_environ_get = os.environ.get
+
+    def side_effect(*args, **kwargs):
+        if args[0] == "TESTING_INIT_RETURNS_MOCKED_RESPONSES":
+            return "False"
+        return original_os_environ_get(*args, **kwargs)
+
+    mocker.patch("os.environ.get", side_effect=side_effect)
     with raises(RequestFailed):
         DataRepo(api_clientes.redis_conn).get_data()
 

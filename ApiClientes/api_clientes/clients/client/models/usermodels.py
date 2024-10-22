@@ -11,7 +11,7 @@ from typing import Annotated, Literal
 from decimal import Decimal
 from datetime import datetime
 
-from api_clientes.clients.client.locations import find_region
+from api_clientes.clients.regions.definitions.locations import find_region
 from api_clientes.clients.client.phone_conversion import convert_br_to_e164
 from api_clientes.clients.regions.tags import Tag
 import re

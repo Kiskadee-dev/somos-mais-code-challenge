@@ -1,4 +1,4 @@
-from rest_framework.serializers import IntegerField, URLField
+from rest_framework.serializers import IntegerField, URLField, CharField
 from rest_framework import serializers
 
 
@@ -67,3 +67,18 @@ class ResponseSerializer(serializers.Serializer):
     next = URLField(required=False)
     previous = URLField(required=False)
     results = ListOfUsersSerializer()
+
+
+class MainViewSerializer(serializers.ListSerializer):
+    child = URLField()
+
+
+class RegionsSerializer(serializers.Serializer):
+    class RegionSerializer(serializers.ListSerializer):
+        child = CharField()
+
+    regions = RegionSerializer(many=True)
+
+
+class TagsSerializer(serializers.ListSerializer):
+    child = CharField()

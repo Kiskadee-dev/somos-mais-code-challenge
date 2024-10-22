@@ -1,4 +1,4 @@
-from api_clientes.clients.client.locations import (
+from api_clientes.clients.regions.definitions.locations import (
     brazil_regions,
     BrazilRegions,
     find_region,
