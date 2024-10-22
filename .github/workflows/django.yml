@@ -27,4 +27,4 @@ jobs:
         poetry install
     - name: Run Tests
       run: |
-        poetry run python -m pytest
+        cd ApiClientes && poetry run pytest
