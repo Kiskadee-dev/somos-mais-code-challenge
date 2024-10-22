@@ -24,13 +24,12 @@ def test_view_get_users(respx_fixture, no_cache):
     assert len(content["results"]["users"]) > 0
 
 
-@pytest.mark.skip("Implement")
 def test_view_get__users_pagination_ident(respx_fixture, no_cache):
     client = APIClient()
     url = reverse("users")
     response = client.get(url)
-
-    has_match = re.match(r"users: ", response.content.decode("utf-8"))
+    data = response.content.decode("utf-8")
+    has_match = re.search(r'"users": ', data)
     assert has_match is not None
 
 

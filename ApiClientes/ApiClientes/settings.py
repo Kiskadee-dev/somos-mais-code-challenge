@@ -128,4 +128,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "api_clientes.pagination.CustomPagination",
+    "DEFAULT_RENDERER_CLASSES": (
+        "api_clientes.renderers.PrettyJSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
 }
