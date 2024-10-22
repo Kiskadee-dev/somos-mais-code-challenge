@@ -1,6 +1,6 @@
 import os
 from typing import Optional
-from fakeredis import FakeRedis, FakeStrictRedis
+from fakeredis import FakeStrictRedis
 import redis
 from api_clientes.clients.datarepo import DataRepo
 
@@ -14,9 +14,14 @@ def get_redis_connection():
     )
 
 
-redis_conn: Optional[FakeRedis | redis.StrictRedis] = None
-if not os.environ.get("TESTING", True):
+redis_conn: Optional[FakeStrictRedis | redis.StrictRedis] = None
+
+TESTING = os.environ.get("TESTING", "True").lower() in ["true"]
+
+
+if not TESTING:
     redis_conn = get_redis_connection()
+    DataRepo(redis_conn).get_data()
 else:
+    print("Fake redis")
     redis_conn = FakeStrictRedis()
-DataRepo(redis_conn).get_data()

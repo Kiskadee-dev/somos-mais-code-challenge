@@ -49,7 +49,8 @@ class UsersByRegion(APIView):
             )
         except ValidationError as e:
             return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"errors": e.json()}
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"errors": str(e)},
             )
 
         return Response(

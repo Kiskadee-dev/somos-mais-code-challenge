@@ -18,6 +18,7 @@ def test_view_get_users(respx_fixture, no_cache):
     content = response.json()
     assert response.status_code == 200
     assert "totalCount" in content
+    assert content["totalCount"] == 2000
     assert "pageNumber" in content
     assert "pageSize" in content
     assert "users" in content["results"]

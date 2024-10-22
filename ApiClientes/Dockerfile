@@ -23,4 +23,5 @@ COPY . ./app
 WORKDIR /app/
 EXPOSE 8080
 ENV TESTING=False
+ENV TESTING_INIT_RETURNS_MOCKED_RESPONSES=False
 ENTRYPOINT ["python", "-u", "manage.py", "runserver", "0.0.0.0:8000"]
