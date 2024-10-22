@@ -1,10 +1,14 @@
+import json
 import timeit
 from typing import Optional
+from django.urls import reverse
 from pydantic import ValidationError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 import api_clientes
+from api_clientes.clients.regions.definitions.locations import brazil_regions
+from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
 from api_clientes.clients.client.models.queries import (
     QueryUserByTagModel,
     QueryUserModel,
@@ -12,7 +16,11 @@ from api_clientes.clients.client.models.queries import (
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.datarepo import DataRepo
 from api_clientes.pagination import CustomPagination
-from api_clientes.serializers import ResponseSerializer
+from api_clientes.serializers import (
+    RegionsSerializer,
+    ResponseSerializer,
+    TagsSerializer,
+)
 from api_clientes.utils.flatten_pydantic import flatten_pydantic
 
 
@@ -52,7 +60,7 @@ class UsersByRegion(APIView):
         except ValidationError as e:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"errors": str(e)},
+                data={"errors": json.loads(e.json())},
             )
 
         keys = api_clientes.redis_conn.smembers(f"{DataRepo.REDIS_REGION_KEY}:{region}")
@@ -75,3 +83,53 @@ class UsersByRegion(APIView):
         return pagination.get_paginated_response(
             data={"users": paginated_users},
         )
+
+
+class Regions(APIView):
+    serializer_class = RegionsSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request):
+        pagination = self.pagination_class()
+
+        regions = brazil_regions
+        new_dict = {}
+        for k, v in regions.items():
+            new_dict[k.value] = v
+
+        paginated_response = pagination.paginate_queryset([new_dict], request)
+        return pagination.get_paginated_response({"regions": paginated_response})
+
+
+class Tags(APIView):
+    serializer_class = TagsSerializer
+    pagination_class = CustomPagination
+
+    def get(self, request):
+        pagination = self.pagination_class()
+        tags = [r.value for r in RegionTypes]
+        tags = pagination.paginate_queryset(tags, request)
+        return pagination.get_paginated_response({"tags": tags})
+
+
+class MainView(APIView):
+    pagination_class = CustomPagination
+
+    def get(self, request):
+        endpoints = [
+            reverse("main"),
+            reverse("schema"),
+            reverse("swagger-ui"),
+            reverse("redoc"),
+            reverse("users"),
+            reverse("users_by_region", args={"region": "sul"}),
+            reverse("users_by_region", args={"region": "sul"}) + "/",
+            reverse("users_by_region_and_tag", args={"region": "sul", "tag": "normal"}),
+            reverse("users_by_region_and_tag", args={"region": "sul", "tag": "normal"})
+            + "/",
+        ]
+        endpoints = [request.build_absolute_uri(url) for url in endpoints]
+
+        pagination = self.pagination_class()
+        paginated_endpoints = pagination.paginate_queryset(endpoints, request)
+        return pagination.get_paginated_response({"endpoints": paginated_endpoints})

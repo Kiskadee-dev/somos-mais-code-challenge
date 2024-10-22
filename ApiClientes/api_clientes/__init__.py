@@ -27,6 +27,5 @@ if not TESTING:
     redis_conn = get_redis_connection()
     load_data()
 else:
-    print("Fake redis")
     redis_conn = FakeStrictRedis()
     load_data()
