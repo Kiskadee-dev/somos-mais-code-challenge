@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: run-ruff
         name: Run ruff formatter before commit
-        entry: poetry run python -m ruff format .
+        entry: poetry -C ApiClientes/pyproject.toml run python -m ruff format .
         language: system
         always_run: true
         pass_filenames: false
@@ -12,7 +12,7 @@ repos:
     hooks:
       - id: run-ruff-checks
         name: Run ruff checks before commit
-        entry: poetry run python -m ruff check .
+        entry: poetry -C ApiClientes/pyproject.toml run python -m ruff check .
         language: system
         always_run: true
         pass_filenames: false
@@ -21,7 +21,7 @@ repos:
     hooks:
       - id: run-pytest
         name: Run pytest before commit
-        entry: poetry run python -m pytest .
+        entry: sh -c 'cd ApiClientes && poetry run python -m pytest -n 4'
         language: system
         always_run: true
         pass_filenames: false
