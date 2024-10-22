@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip poetry
-        poetry install
+        cd ApiClientes && poetry install
     - name: Run Tests
       run: |
-        poetry run python -m pytest
+        cd ApiClientes && poetry run python -m pytest
