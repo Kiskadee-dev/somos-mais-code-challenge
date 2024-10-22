@@ -5,7 +5,6 @@ from pytest import raises
 import api_clientes
 from api_clientes.clients.client.exceptions import RequestFailed
 from api_clientes.clients.client.models.usermodels import UserModel
-import respx
 from httpx import Response
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
@@ -13,7 +12,6 @@ from api_clientes.clients.datarepo import DataRepo
 from datetime import datetime
 
 
-@respx.mock(assert_all_called=True)
 def test_get_users_not_found(mocker, respx_mock, redis_client):
     respx_mock.get(EndpointRepo.users_json.value).mock(
         return_value=Response(status_code=404)

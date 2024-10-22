@@ -2,6 +2,7 @@ import os
 import pytest
 import respx
 from httpx import Response
+import api_clientes
 from api_clientes.clients.client.endpoints import EndpointRepo
 from api_clientes.clients.client.tests.mock.load_mock_response import (
     get_mock_file_content_csv,
@@ -9,11 +10,14 @@ from api_clientes.clients.client.tests.mock.load_mock_response import (
 )
 
 
+@pytest.fixture
+def no_cache(scope="function"):
+    api_clientes.redis_conn.flushall()
+
+
 @pytest.fixture(scope="function")
 def respx_fixture(mocker):
     with respx.mock(assert_all_called=True) as respx_mock:
-        print("Patching respx")
-
         original_os_environ_get = os.environ.get
 
         def side_effect(*args, **kwargs):

@@ -96,7 +96,10 @@ class DataRepo:
                 f"{self.REDIS_USER_KEY}:{user_id}",
                 dumped_data,
             )
-            pipe.sadd(f"{self.REDIS_REGION_KEY}:{user['location']['region']}", user_id)
+            pipe.sadd(
+                f"{self.REDIS_REGION_KEY}:{user['location']['region']}",
+                f"{self.REDIS_USER_KEY}:{user_id}",
+            )
             count += 1
         pipe.execute()
 

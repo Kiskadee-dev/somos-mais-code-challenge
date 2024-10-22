@@ -19,9 +19,14 @@ redis_conn: Optional[FakeStrictRedis | redis.StrictRedis] = None
 TESTING = os.environ.get("TESTING", "True").lower() in ["true"]
 
 
+def load_data():
+    DataRepo(redis_conn).get_data()
+
+
 if not TESTING:
     redis_conn = get_redis_connection()
-    DataRepo(redis_conn).get_data()
+    load_data()
 else:
     print("Fake redis")
     redis_conn = FakeStrictRedis()
+    load_data()

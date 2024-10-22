@@ -1,3 +1,4 @@
+import timeit
 from typing import Optional
 from pydantic import ValidationError
 from rest_framework.views import APIView
@@ -8,10 +9,10 @@ from api_clientes.clients.client.models.queries import (
     QueryUserByTagModel,
     QueryUserModel,
 )
+from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.datarepo import DataRepo
 from api_clientes.pagination import CustomPagination
 from api_clientes.serializers import ResponseSerializer
-
 from api_clientes.utils.flatten_pydantic import flatten_pydantic
 
 
@@ -40,9 +41,10 @@ class UsersByRegion(APIView):
     pagination_class = CustomPagination
 
     def get(self, request, region: str, tag: Optional[str] = None):
-        validated_query: Optional[QueryUserModel | QueryUserByTagModel] = None
+        timer = timeit.default_timer()
+        DataRepo(api_clientes.redis_conn).get_data()
         try:
-            validated_query = (
+            (
                 QueryUserModel(region=region)
                 if tag is None
                 else QueryUserByTagModel(region=region, tag=tag)
@@ -53,7 +55,23 @@ class UsersByRegion(APIView):
                 data={"errors": str(e)},
             )
 
-        return Response(
-            status=status.HTTP_501_NOT_IMPLEMENTED,
-            data={"YourQuery": flatten_pydantic(validated_query)},
+        keys = api_clientes.redis_conn.smembers(f"{DataRepo.REDIS_REGION_KEY}:{region}")
+        data = api_clientes.redis_conn.mget(keys)
+
+        filtered_data = []
+        for u in data:
+            user = UserModel.model_validate_json(u)
+            if user.location.region == region:
+                if tag is not None:
+                    if user.type == tag:
+                        filtered_data.append(flatten_pydantic(user))
+                        continue
+                filtered_data.append(flatten_pydantic(user))
+
+        pagination = self.pagination_class()
+        paginated_users = pagination.paginate_queryset(filtered_data, request)
+
+        print(f"{timeit.default_timer()-timer:.5f}")
+        return pagination.get_paginated_response(
+            data={"users": paginated_users},
         )
