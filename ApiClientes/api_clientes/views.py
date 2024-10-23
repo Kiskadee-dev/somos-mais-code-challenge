@@ -17,6 +17,7 @@ from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.clients.datarepo import DataRepo
 from api_clientes.pagination import CustomPagination
 from api_clientes.serializers import (
+    MainViewSerializer,
     RegionsSerializer,
     ResponseSerializer,
     TagsSerializer,
@@ -113,6 +114,7 @@ class Tags(APIView):
 
 
 class MainView(APIView):
+    serializer_class = MainViewSerializer
     pagination_class = CustomPagination
 
     def get(self, request):
