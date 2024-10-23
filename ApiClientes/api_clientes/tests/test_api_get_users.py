@@ -1,13 +1,6 @@
 import re
-import pytest
 from rest_framework.test import APIClient
 from django.urls import reverse
-from api_clientes import redis_conn
-
-
-@pytest.fixture(scope="function", autouse=True)
-def no_cache():
-    redis_conn.flushall()
 
 
 def test_view_get_users(respx_fixture, no_cache):

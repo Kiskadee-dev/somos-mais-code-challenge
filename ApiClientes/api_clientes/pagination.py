@@ -23,5 +23,4 @@ class CustomPagination(PageNumberPagination):
 
     def get_page_size(self, request):
         page_size = super().get_page_size(request)
-        print(f"Page size used: {page_size}")  # Debugging
         return page_size
