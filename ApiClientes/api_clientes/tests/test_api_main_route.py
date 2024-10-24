@@ -10,6 +10,12 @@ def test_main_routing(no_cache):
     assert response.status_code == 200
     content = response.json()
     assert "results" in content
+    results = content["results"]
+    assert "endpoints" in results
+    endpoints = results["endpoints"]
+    for uri in endpoints:
+        response = client.get(uri)
+        assert response.status_code not in [404, 500]
 
 
 def test_main_regions(no_cache):

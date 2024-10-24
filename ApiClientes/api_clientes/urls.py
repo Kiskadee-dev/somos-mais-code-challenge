@@ -13,7 +13,7 @@ urlpatterns = [
     path("", MainView.as_view(), name="main"),
     path("users", Users.as_view(), name="users"),
     path("users/region/", Regions.as_view(), name="regions"),
-    path("users/tag/", Tags.as_view(), name="tags"),
+    path("users/region/tag/", Tags.as_view(), name="tags"),
     path("users/<str:region>", UsersByRegion.as_view(), name="users_by_region"),
     path(
         "users/<str:region>/<str:tag>",
