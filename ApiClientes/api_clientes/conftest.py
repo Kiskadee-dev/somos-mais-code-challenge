@@ -15,13 +15,13 @@ from api_clientes.utils import mock_os
 
 @pytest.fixture(autouse=True)
 def allow_init(mocker):
-    mock_os.mock_os(mocker)
+    mock_os.allow_init(mocker)
 
 
 @pytest.fixture(scope="function")
 def respx_fixture(mocker, allow_init):
     with respx.mock(assert_all_called=True) as respx_mock:
-        mock_os.mock_os(mocker)
+        mock_os.allow_init(mocker)
 
         respx_mock.get(EndpointRepo.users_json.value).mock(
             return_value=Response(status_code=200, content=get_mock_file_content_json())

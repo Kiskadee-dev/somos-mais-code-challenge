@@ -26,7 +26,6 @@ EXPOSE 8080
 RUN python manage.py collectstatic --noinput
 
 ENV REDIS_TESTING=False
-ENV TESTING_INIT_RETURNS_MOCKED_RESPONSES=False
 ENV PYTHONUNBUFFERED=1
 ENV INIT=True
 ENTRYPOINT ["gunicorn", "-w", "4", "ApiClientes.wsgi:application", "--bind", "0.0.0.0:8000", "--log-level=debug"]

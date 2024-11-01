@@ -1,14 +1,16 @@
 import os
 
+from api_clientes.env_vars_repo import EnvironVars
 
-def mock_os(mocker):
+
+def allow_init(mocker):
     original_os_environ_get = os.environ.get
 
     def side_effect(*args, **kwargs):
         match args[0]:
-            case "TESTING_INIT_RETURNS_MOCKED_RESPONSES":
+            case EnvironVars.REDIS_TESTING.value:
                 return "False"
-            case "INIT":
+            case EnvironVars.INIT.value:
                 return "True"
             case _:
                 return original_os_environ_get(*args, **kwargs)

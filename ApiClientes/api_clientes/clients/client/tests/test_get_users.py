@@ -11,6 +11,8 @@ from api_clientes.clients.regions.definitions.regiontypes import RegionTypes
 from api_clientes.clients.datarepo import DataRepo
 from datetime import datetime
 
+from api_clientes.env_vars_repo import EnvironVars
+
 
 def test_get_users_not_found(mocker, respx_mock, redis_client):
     respx_mock.get(EndpointRepo.users_json.value).mock(
@@ -22,7 +24,7 @@ def test_get_users_not_found(mocker, respx_mock, redis_client):
     original_os_environ_get = os.environ.get
 
     def side_effect(*args, **kwargs):
-        if args[0] == "TESTING_INIT_RETURNS_MOCKED_RESPONSES":
+        if args[0] == EnvironVars.REDIS_TESTING.value:
             return "False"
         return original_os_environ_get(*args, **kwargs)
 

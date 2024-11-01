@@ -3,10 +3,12 @@ from typing import Optional
 from fakeredis import FakeStrictRedis
 import redis
 from api_clientes.clients.datarepo import DataRepo
+from api_clientes.env_vars_repo import EnvironVars
 
-
-INIT = os.environ.get("INIT", "False").lower() in ["true"]
-REDIS_TESTING = os.environ.get("REDIS_TESTING", "True").lower() in ["true"]
+INIT = os.environ.get(EnvironVars.INIT.value, "False").lower() in ["true"]
+REDIS_TESTING = os.environ.get(EnvironVars.REDIS_TESTING.value, "True").lower() in [
+    "true"
+]
 
 
 def get_redis_connection() -> redis.StrictRedis | FakeStrictRedis:

@@ -9,6 +9,7 @@ from redis import Redis
 from api_clientes.clients.client.get_users import get_users
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.utils import flatten_pydantic
+from api_clientes.env_vars_repo import EnvironVars
 
 
 class DataRepo:
@@ -25,7 +26,7 @@ class DataRepo:
     def __init__(self, redis: Redis):
         self.redis = redis
         self.TESTING_INIT_RETURNS_MOCKED_RESPONSES = os.environ.get(
-            "TESTING_INIT_RETURNS_MOCKED_RESPONSES", "True"
+            EnvironVars.REDIS_TESTING.value, "True"
         ).lower() in ["true"]
 
     def none_or_val(self, value) -> Optional[Any]:
