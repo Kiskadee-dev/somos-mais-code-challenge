@@ -23,6 +23,11 @@ class DataRepo:
     REDIS_USER_KEY = f"{REDIS_CACHE_KEY}:user"
     REDIS_REGION_KEY = f"{REDIS_CACHE_KEY}:region"
 
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(DataRepo, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self, redis: Redis):
         self.redis = redis
         self.TESTING_INIT_RETURNS_MOCKED_RESPONSES = os.environ.get(
