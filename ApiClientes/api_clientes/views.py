@@ -30,10 +30,12 @@ class Users(APIView):
     pagination_class = CustomPagination
 
     def get(self, request):
+        timer = timeit.default_timer()
         users = DataRepo(api_clientes.redis_conn).get_data()
         pagination = self.pagination_class()
         paginated_users = pagination.paginate_queryset(users, request)
 
+        print(f"response time: {timeit.default_timer()-timer:.5f}")
         if paginated_users is not None:
             return pagination.get_paginated_response(
                 {"users": [flatten_pydantic(u) for u in paginated_users]}
@@ -79,7 +81,7 @@ class UsersByRegion(APIView):
         pagination = self.pagination_class()
         paginated_users = pagination.paginate_queryset(filtered_data, request)
 
-        print(f"{timeit.default_timer()-timer:.5f}")
+        print(f"response time: {timeit.default_timer()-timer:.5f}")
         return pagination.get_paginated_response(
             data={"users": paginated_users},
         )
