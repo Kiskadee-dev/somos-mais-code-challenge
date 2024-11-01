@@ -6,7 +6,7 @@ from api_clientes.clients.datarepo import DataRepo
 
 
 INIT = os.environ.get("INIT", "False").lower() in ["true"]
-REDIS_TESTING = os.environ.get("TESTING", "True").lower() in ["true"]
+REDIS_TESTING = os.environ.get("REDIS_TESTING", "True").lower() in ["true"]
 
 
 def get_redis_connection() -> redis.StrictRedis | FakeStrictRedis:
@@ -31,3 +31,4 @@ def load_data():
 
 if INIT:
     redis_conn = get_redis_connection()
+    load_data()

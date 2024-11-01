@@ -51,7 +51,6 @@ class UsersByRegion(APIView):
 
     def get(self, request, region: str, tag: Optional[str] = None):
         timer = timeit.default_timer()
-        DataRepo(api_clientes.redis_conn).get_data()
         try:
             (
                 QueryUserModel(region=region)

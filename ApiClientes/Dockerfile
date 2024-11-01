@@ -22,11 +22,14 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY . ./app
 WORKDIR /app/
 EXPOSE 8080
+
+RUN python manage.py collectstatic --noinput
+
 ENV REDIS_TESTING=False
 ENV TESTING_INIT_RETURNS_MOCKED_RESPONSES=False
+ENV PYTHONUNBUFFERED=1
 ENV INIT=True
-RUN python manage.py collectstatic --noinput
-ENTRYPOINT ["gunicorn", "-w", "4", "ApiClientes.wsgi:application", "--bind", "0.0.0.0:8000"]
+ENTRYPOINT ["gunicorn", "-w", "4", "ApiClientes.wsgi:application", "--bind", "0.0.0.0:8000", "--log-level=debug"]
 
 
 FROM caddy:2.8.4-alpine AS caddy-runtime

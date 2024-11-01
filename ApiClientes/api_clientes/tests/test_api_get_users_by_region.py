@@ -1,8 +1,11 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from api_clientes.clients.datarepo import DataRepo
 
-def test_get_by_region(respx_fixture, no_cache):
+
+def test_get_by_region(respx_fixture, redis_client):
+    DataRepo(redis_client).get_data()
     client = APIClient()
     params = {"region": "sul"}
     url = reverse("users_by_region", kwargs=params)
@@ -17,7 +20,8 @@ def test_get_by_region(respx_fixture, no_cache):
     assert len(content["results"]["users"]) > 0
 
 
-def test_get_by_region_bad_params(respx_fixture, no_cache):
+def test_get_by_region_bad_params(respx_fixture, redis_client):
+    DataRepo(redis_client).get_data()
     client = APIClient()
     params = {"region": "old-west"}
     url = reverse("users_by_region", kwargs=params)
@@ -27,7 +31,8 @@ def test_get_by_region_bad_params(respx_fixture, no_cache):
     assert "errors" in content
 
 
-def test_get_by_region_and_tag(respx_fixture, no_cache):
+def test_get_by_region_and_tag(respx_fixture, redis_client):
+    DataRepo(redis_client).get_data()
     client = APIClient()
     params = {"region": "sul", "tag": "normal"}
     url = reverse("users_by_region_and_tag", kwargs=params)

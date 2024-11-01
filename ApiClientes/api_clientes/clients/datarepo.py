@@ -68,10 +68,10 @@ class DataRepo:
 
         if len(keys) > 0:
             values = self.redis.mget(keys)
-            print(f"Retrieved {len(values)} users")
+            print(f"Retrieved {len(values)} users from cache")
             return [UserModel.model_validate_json(u) for u in values]
 
-        success = self.redis.set(self.REDIS_LOCK_KEY, "True", nx=True, ex=5)
+        success = self.redis.set(self.REDIS_LOCK_KEY, "True", nx=True, ex=10)
         success = self.none_or_val(success)
 
         if not success:
