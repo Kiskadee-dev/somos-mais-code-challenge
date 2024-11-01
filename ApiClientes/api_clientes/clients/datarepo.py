@@ -1,3 +1,4 @@
+from typing import Tuple
 import asyncio
 import json
 import os
@@ -10,10 +11,12 @@ from api_clientes.clients.client.get_users import get_users
 from api_clientes.clients.client.models.usermodels import UserModel
 from api_clientes.utils import flatten_pydantic
 from api_clientes.env_vars_repo import EnvironVars
+from datetime import datetime, timedelta
 
 
 class DataRepo:
     _instance = None
+    _cached_response: Optional[Tuple[list[UserModel], int]] = None
 
     _data: Optional[list[UserModel]] = None
     loaded = False
@@ -49,6 +52,9 @@ class DataRepo:
             copy = copy.replace('"', "")
         return None if copy == "null" else value
 
+    def save_in_memory(self, data):
+        self._cached_response = (data, datetime.now() + timedelta(minutes=30))
+
     def get_data(self) -> list[UserModel]:
         """
         Gets data from source or the cached version
@@ -56,6 +62,10 @@ class DataRepo:
         Returns:
             List[UserModel]: The list of user models
         """
+        if self._cached_response and self._cached_response[1] > datetime.now():
+            return self._cached_response[0]
+        self._cached_response = None
+
         users = []
         keys = []
 
@@ -75,8 +85,9 @@ class DataRepo:
         if len(keys) > 0:
             values = self.redis.mget(keys)
             print(f"Retrieved {len(values)} users from cache")
-            return [UserModel.model_validate_json(u) for u in values]
-
+            response = [UserModel.model_validate_json(u) for u in values]
+            self.save_in_memory(response)
+            return response
         success = self.redis.set(self.REDIS_LOCK_KEY, "True", nx=True, ex=10)
         success = self.none_or_val(success)
 
@@ -108,7 +119,8 @@ class DataRepo:
             )
             count += 1
         pipe.execute()
-
+        self.save_in_memory(users)
         print(f"Saved {count} users")
+
         self.redis.delete(self.REDIS_LOCK_KEY)
         return users

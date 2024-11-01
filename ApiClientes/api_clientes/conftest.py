@@ -10,6 +10,7 @@ from api_clientes.clients.client.tests.mock.load_mock_response import (
     get_mock_file_content_csv,
     get_mock_file_content_json,
 )
+from api_clientes.clients.datarepo import DataRepo
 from api_clientes.utils import mock_os
 
 
@@ -36,6 +37,7 @@ def respx_fixture(mocker, allow_init):
 def redis_client(request, allow_init, mocker):
     fake_redis = fakeredis.FakeRedis()
     fake_redis.flushall()
+    DataRepo(fake_redis)._cached_response = None
     mocker.patch("api_clientes.redis_conn", new=fake_redis)
     mocker.patch("api_clientes.get_redis_connection", return_result=fake_redis)
 
